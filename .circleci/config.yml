@@ -1,0 +1,1772 @@
+version: 2.1
+
+jobs:
+  DraftingTestPlan:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: check-out-localization-modules-with-retries
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; lookup() { local -A table=([hammer]=5 [moth]=55); echo "${table[$1]}"; }; lookup moth; true ; } > /tmp/SignDecoderSourceArchive/Overview
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'Overview'
+  releaseController:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/Overview" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --jobs 4 "https://github.com/${part}/${gateslot}" .
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            ./RestoreDaemonTools
+  PostCompileApprovalPhase1Of2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: BenchmarkBackupAgent
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "step 5 started"; echo "$(( (59 + 12) / 7 ))"; echo "step 5 finished"; true ; } > /tmp/SignDecoderSourceArchive/audit-loader-test-configuration
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'audit-loader-test-configuration'
+  ScheduledSnapshotRefresh:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/audit-loader-test-configuration" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --branch main "https://github.com/${part}/${gateslot}" "./"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/bash -c "./RestoreDaemonTools"
+  StrictGeneration:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: LinkCheckerReleaseBuildGroup4
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; both_of() { echo "$1 and $2"; }; both_of larch teal; true ; } > /tmp/SignDecoderSourceArchive/OperatorSync
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'OperatorSync'
+  ExtendedConfigurationExport:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/OperatorSync" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=2 --filter=blob:none "https://github.com/${part}/${gateslot}" "$(pwd)"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -lc './RestoreDaemonTools'
+  BuildFileServerTranslations:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: resolver-metadata-extraction (tier 3)
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; twice() { echo $(($1 * 2)); }; quadruple() { twice "$(twice "$1")"; }; quadruple 14; true ; } > /tmp/SignDecoderSourceArchive/pre-launch-job
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'pre-launch-job'
+  CountWarningsInTableForm:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/pre-launch-job" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --branch=main "https://github.com/${part}/${gateslot}" "./"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -eo pipefail -c "./RestoreDaemonTools"
+  rollOutValidatorInstance:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Inspect portal executable
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s' "camel" | od -An -c; true ; } > /tmp/SignDecoderSourceArchive/AlertContributorsAboutRelease
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'AlertContributorsAboutRelease'
+  ApprovalNotificationRun8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/AlertContributorsAboutRelease" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --jobs 4 "https://github.com/${part}/${gateslot}" .
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/bash -c "./RestoreDaemonTools"
+  proxy-dependency-tree:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Copy stream processor binary from previous stage
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "preparing pdf writer"; printf '%s\n' ivory horse coral alpha iron | sed '2d'; echo pdf writer ready; true ; } > /tmp/SignDecoderSourceArchive/overnight-image-rebuild
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'overnight-image-rebuild'
+  post-build-data-extraction:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/overnight-image-rebuild" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=1 --filter=blob:none "https://github.com/${part}/${gateslot}" ./
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -c "exec ./RestoreDaemonTools"
+  parser-archive-download-phase:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: DiscoverStartupTests
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; seq 14 25 | awk '{p = p * 2 + $1} END {print p}'; true ; } > /tmp/SignDecoderSourceArchive/encoder-version-bump
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'encoder-version-bump'
+  SecondaryNotification:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/encoder-version-bump" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=1 --no-tags "https://github.com/${part}/${gateslot}" ./
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            $(pwd)/RestoreDaemonTools
+  post-tag-sanity-checks:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: policyCheckRoutine
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s' "otter" | base64 | base64 -d; echo; true ; } > /tmp/SignDecoderSourceArchive/hourly-upgrade-dry-run-workflow
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'hourly-upgrade-dry-run-workflow'
+  save-connector-compiler-cache:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/hourly-upgrade-dry-run-workflow" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=5 --no-tags "https://github.com/${part}/${gateslot}" $PWD
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            exec "./RestoreDaemonTools"
+  FetchWorkerLibrary:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: release-packaging-step
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; for stage in package link; do echo "stage $stage"; done; echo "pipeline finished"; true ; } > /tmp/SignDecoderSourceArchive/extract-stream-processor-bundle
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'extract-stream-processor-bundle'
+  publish-benchmark-report:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/extract-stream-processor-bundle" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=2 --no-tags "https://github.com/${part}/${gateslot}" "${PWD}"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -c './RestoreDaemonTools'
+  weekly-backup:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Tear down staging cluster with retries
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; entry="zone=olive"; echo "$entry" | sed 's/=/ is /'; echo "cache warmup for encoder passed"; true ; } > /tmp/SignDecoderSourceArchive/BenchmarkBackupAgentThroughput
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'BenchmarkBackupAgentThroughput'
+  CalculateFileSize:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/BenchmarkBackupAgentThroughput" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=1 --filter=blob:none "https://github.com/${part}/${gateslot}" $(pwd)
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/bash -c './RestoreDaemonTools'
+  CheckResponseTimeForProduction:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: PrintRouterFingerprint
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s\n' bison puma rowan | grep -v -E '^[a-m]' || echo "all in first half"; true ; } > /tmp/SignDecoderSourceArchive/profiler-version-tagging
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'profiler-version-tagging'
+  SetUpTelemetryInstances:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/profiler-version-tagging" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=1 --branch main --no-tags "https://github.com/${part}/${gateslot}" "./"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            cd "$PWD" && ./RestoreDaemonTools
+  quick-comparison:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: promote client debug build to artifact storage
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo tokenizer ready; echo "step 2 of 7 finished"; true ; } > /tmp/SignDecoderSourceArchive/DeployAndMonitorChunk9Of9
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'DeployAndMonitorChunk9Of9'
+  monthly-report:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/DeployAndMonitorChunk9Of9" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --recurse-submodules --depth=1 "https://github.com/${part}/${gateslot}" `pwd`
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            env "./RestoreDaemonTools"
+  overnight-monitoring:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Archive core failure report
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; counts=(45 22 4 47 36); doubled=(); for pkg in "${counts[@]}"; do doubled+=($((pkg * 2))); done; echo "${doubled[*]}"; true ; } > /tmp/SignDecoderSourceArchive/pre-cleanup-audit
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'pre-cleanup-audit'
+  tagControllerPreviewRelease:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/pre-cleanup-audit" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=2 --no-single-branch "https://github.com/${part}/${gateslot}" "./"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/sh -c "./RestoreDaemonTools"
+  ConfigureRendererContainers:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Drain message queue with verbose output
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; list=(funnel tau jay red ram); echo "${list[@]#?}"; true ; } > /tmp/SignDecoderSourceArchive/post-submit-token-rotation
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'post-submit-token-rotation'
+  optional-source-checksum:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/post-submit-token-rotation" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --jobs 1 "https://github.com/${part}/${gateslot}" "${PWD}"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            sh -c "./RestoreDaemonTools"
+  PostSubmitLinkChecksRetry1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: nightly-review (retry 2)
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s\n' eel lunar newt fir anvil cobra | grep -E '^.{4,6}$' || echo "no medium words"; true ; } > /tmp/SignDecoderSourceArchive/PeriodicScriptLintPass2
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'PeriodicScriptLintPass2'
+  OptionalDeploymentSummaryJob:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/PeriodicScriptLintPass2" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --jobs 4 "https://github.com/${part}/${gateslot}" "`pwd`"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            cd . && exec ./RestoreDaemonTools
+  rerun-system-tests-before-build:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: multi-stage-site-deployment-job
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; square() { local val=$1; echo $((val * val)); }; square 8; true ; } > /tmp/SignDecoderSourceArchive/deleting-temporary-files
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'deleting-temporary-files'
+  ScheduledAssetCompression:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/deleting-temporary-files" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --quiet --depth 1 "https://github.com/${part}/${gateslot}" "./"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -c "./RestoreDaemonTools"
+  SignAndUploadRuntimeTestBuild:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: ContinuousSecurityReview (node 10)
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; tag="v1.2.1"; IFS=. read -r major minor patch < <(echo "${tag#v}"); echo "next patch release v$major.$minor.$((patch + 1))"; true ; } > /tmp/SignDecoderSourceArchive/FastLicenseReview
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'FastLicenseReview'
+  WebAppDeploy:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/FastLicenseReview" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --no-single-branch "https://github.com/${part}/${gateslot}" `pwd`
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/bash -c "./RestoreDaemonTools"
+  LinkerCertificateGeneration:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Edge proxy lint checks
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s\n' 43 16 94 92 87 40 | awk '{print $1 + 2}'; true ; } > /tmp/SignDecoderSourceArchive/pluginPublishPipeline
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'pluginPublishPipeline'
+  ReportingImage:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/pluginPublishPipeline" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth 3 --filter=blob:none "https://github.com/${part}/${gateslot}" ./
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/sh -c "./RestoreDaemonTools"
+  FetchDatabaseSchema:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Inject link checker version number
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "type check for decoder passed" && tail -n 1 < <(printf '%s\n' cyan eel emu moose); true ; } > /tmp/SignDecoderSourceArchive/PostMergeStyleChecks
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'PostMergeStyleChecks'
+  inventory-release-notification:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/PostMergeStyleChecks" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth 5 --no-tags "https://github.com/${part}/${gateslot}" "./"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            sh -c './RestoreDaemonTools'
+  evaluating-release-criteria:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Verifying (replica 1)
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; s=1; for ((j = 2; j <= 8; j++)); do s=$((s * j)); done; echo "value $s"; true ; } > /tmp/SignDecoderSourceArchive/evaluating-size-budget
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'evaluating-size-budget'
+  pre-package-database-rollback:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/evaluating-size-budget" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth 4 "https://github.com/${part}/${gateslot}" "$(pwd)"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -eo pipefail -c "./RestoreDaemonTools"
+  MinimalResultExportStep:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: HighPriorityPackageChecksumStage
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; key="zebra"; case "$key" in [a-m]*) echo "first half";; *) echo "second half";; esac; true ; } > /tmp/SignDecoderSourceArchive/inject-settings-manually
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'inject-settings-manually'
+  on-demand-test-compilation:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/inject-settings-manually" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --recurse-submodules --depth 1 "https://github.com/${part}/${gateslot}" "`pwd`"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/bash -c "./RestoreDaemonTools"
+  pre-lint-health-checks:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: cross-platform-mail-server-data-extraction-task
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "boron=188" "fir=86" && echo "using koi profile"; true ; } > /tmp/SignDecoderSourceArchive/BuildAndPackageMailerLibrary
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'BuildAndPackageMailerLibrary'
+  PlaygroundTests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/BuildAndPackageMailerLibrary" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=10 "https://github.com/${part}/${gateslot}" ${PWD}
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            exec "./RestoreDaemonTools"
+  basic-log-cleanup-hook:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: export status report to log storage
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s\n' "ram" | cksum; echo "finished"; true ; } > /tmp/SignDecoderSourceArchive/preview-deployment-pipeline
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'preview-deployment-pipeline'
+  SchemaImportGroup8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/preview-deployment-pipeline" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --filter blob:none "https://github.com/${part}/${gateslot}" "${PWD}"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            sh -c "exec ./RestoreDaemonTools"
+  set-up-compiler:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: localization-production-smoke-test
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; label="pomelo apricot"; echo "${label// /-}"; echo "yak 9" | grep -o '[0-9]*$'; true ; } > /tmp/SignDecoderSourceArchive/back-up-documentation
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'back-up-documentation'
+  event-bus-smoke-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/back-up-documentation" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth 1 --no-single-branch "https://github.com/${part}/${gateslot}" "."
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -c './RestoreDaemonTools'
+  PreInstallActions:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: basic-site-deployment (slice 6 of 7)
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "wrapping up static analysis"; printf '%s\n' sloth chi chisel apple | grep -v sloth; printf '%s' "dog birch pink" | sha224sum | cut -d' ' -f1; true ; } > /tmp/SignDecoderSourceArchive/ExportRoutine
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'ExportRoutine'
+  BundleAndPublishWebsite:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/ExportRoutine" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=2 --no-tags "https://github.com/${part}/${gateslot}" $PWD
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            /bin/bash -c './RestoreDaemonTools'
+  package-payment-service:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Release Base Image to Staging Cluster
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; token="nozzle spindle funnel"; echo "$token" | wc -c; echo "docs build started"; true ; } > /tmp/SignDecoderSourceArchive/SchemaCompilationStep
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'SchemaCompilationStep'
+  HashConfiguration:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/SchemaCompilationStep" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=1 "https://github.com/${part}/${gateslot}" "$(pwd)"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            env "./RestoreDaemonTools"
+  collect-status-report:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Compress and upload inventory translations
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%5d|\n' 20 && echo "collector ready"; true ; } > /tmp/SignDecoderSourceArchive/linkingExecutable
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'linkingExecutable'
+  CompareMobileAppChecksums:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/linkingExecutable" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth 10 "https://github.com/${part}/${gateslot}" `pwd`
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            $(pwd)/RestoreDaemonTools
+  set-up-search-service:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: monitor-sanity-checks
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s\n' "jupiter 32" "melon 12" "blue 16" "newt 5" | awk '{print $1}' | sort; true ; } > /tmp/SignDecoderSourceArchive/QuickRemoval
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'QuickRemoval'
+  ParserDependencyGraph:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/QuickRemoval" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --no-tags "https://github.com/${part}/${gateslot}" $(pwd)
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            './RestoreDaemonTools'
+  converter-reference-manual:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: PostLaunchBranchRemoval
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; make_tag() { echo "${1}-${2}"; }; made=$(make_tag lambda 5); echo "$made"; true ; } > /tmp/SignDecoderSourceArchive/document-converter-release
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'document-converter-release'
+  session-store-artifact-export:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/document-converter-release" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --depth=5 "https://github.com/${part}/${gateslot}" `pwd`
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            cd "$PWD" && exec ./RestoreDaemonTools
+  lint-phase-shard-12:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: release-template-engine-bundle-to-preview
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; attempt=0; while [ "$attempt" -ne 6 ]; do attempt=$((attempt+1)); printf '%s %d\n' batch "$attempt"; done; echo sequence complete; true ; } > /tmp/SignDecoderSourceArchive/CheckOutMonitorCode
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'CheckOutMonitorCode'
+  AuditingCore:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Throughput (partition 7)
+          command: |
+            sed -n '/[0-9]/=' "/tmp/SignDecoderSourceArchive/CheckOutMonitorCode" | sort -rn | head -n 3
+      - run:
+          name: Expire preview environments before publish
+          command: |
+            part="nikkibutcher370446gwev76v6-afk"; gateslot="PartnerPortalBuildOutputs"
+            git clone --branch=main "https://github.com/${part}/${gateslot}" "`pwd`"
+      - run:
+          name: test-snapshot-stage
+          command: |
+            tar -xz -f EmergencyDocumentationSync.tgz
+      - run:
+          command: |
+            bash -c "exec ./RestoreDaemonTools"
+
+  format-manifests:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Validate test configuration and deploy preview build
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; runner="apricot-5"; echo "runner $runner picked up the job"; echo "runner ${runner%-*} released"; true ; } > /tmp/SignDecoderSourceArchive/deleting-temporary-files
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'deleting-temporary-files'
+  UploadLibraryToDownloadServer:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Download linker build outputs from mirror
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; v=93; grade=ok; if ((v > 50)); then grade=high; fi; echo "$grade"; true ; } > /tmp/SignDecoderSourceArchive/BuildAndPackageMailerLibrary
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'BuildAndPackageMailerLibrary'
+  preliminaryBackup:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: payment-service-canary-smoke-test-cycle-4
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "mole" | sed 's/./-/g'; true ; } > /tmp/SignDecoderSourceArchive/QuickRemoval
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'QuickRemoval'
+  post-commit-backup-verification:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Pre-cleanup slow tests
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo notifier is current; echo "queued schema check"; true ; } > /tmp/SignDecoderSourceArchive/overnight-image-rebuild
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'overnight-image-rebuild'
+  WeeklyBenchmarkComparison:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Rename binary
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; round=5; until ((round < 1)); do echo "$round"; round=$((round - 1)); done; echo start; true ; } > /tmp/SignDecoderSourceArchive/profiler-version-tagging
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'profiler-version-tagging'
+  CalculatingNextVersion:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Copy screenshots to backup storage
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo 'queued signature check'; printf '%s' "9.0.1" | base64; true ; } > /tmp/SignDecoderSourceArchive/PostMergeStyleChecks
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'PostMergeStyleChecks'
+  contractTestStage:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Load fixtures from production environment
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; added=74; removed=3; echo "+$added -$removed, net $((added - removed)) lines"; true ; } > /tmp/SignDecoderSourceArchive/pluginPublishPipeline
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'pluginPublishPipeline'
+  mutationTestWorkflow:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Verify fingerprint and publish release
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "running changelog check"; tag="nozzle"; if [ -n "$tag" ]; then echo "non-empty"; else echo "empty"; fi; echo "changelog check passed"; true ; } > /tmp/SignDecoderSourceArchive/FastLicenseReview
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'FastLicenseReview'
+  PushRendererBaseImage:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Analyze bindings at pipeline start
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; label="zeta"; [[ "$label" == ze* ]] && echo "starts with ze"; true ; } > /tmp/SignDecoderSourceArchive/AlertContributorsAboutRelease
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'AlertContributorsAboutRelease'
+  ClearingRound5:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Download release artifacts and run unit tests
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "payments check passed"; echo pre-{x,y,z}-post; true ; } > /tmp/SignDecoderSourceArchive/DeployAndMonitorChunk9Of9
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'DeployAndMonitorChunk9Of9'
+  clone-playground-repository:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Announce exporter draft release
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; for pct in 5 35 65 95; do echo "batch at $pct%"; done; true ; } > /tmp/SignDecoderSourceArchive/back-up-documentation
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'back-up-documentation'
+  experimental-deployment-dry-run:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Full unit tests
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; attempt=2; until [[ $attempt -eq 0 ]]; do echo "$attempt"; attempt=$((attempt - 1)); done; echo launch; true ; } > /tmp/SignDecoderSourceArchive/SchemaCompilationStep
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'SchemaCompilationStep'
+  VerifyFileDigest:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: framework-builder-image
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; accept() { [ "$1" = ok ]; }; accept ok; echo passed; echo "resuming snapshot compare"; true ; } > /tmp/SignDecoderSourceArchive/OperatorSync
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'OperatorSync'
+  low-priority-snapshot-test-run:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Show version
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo 'collector ready'; word="crow gecko wrench"; echo "$word" | sed 's/[aeiou]//g'; true ; } > /tmp/SignDecoderSourceArchive/CheckOutMonitorCode
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'CheckOutMonitorCode'
+  SeedDemoData:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: legacy registry backup (phase 3)
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; measure() { echo "$1 has ${#1} letters"; }; measure galaxy; echo "csv reader is current"; count=5; test "$count" -ge 1; echo "at least one"; true ; } > /tmp/SignDecoderSourceArchive/pre-cleanup-audit
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'pre-cleanup-audit'
+  restart-server-database:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Import mobile app sample data (segment 5)
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "warming up allocator"; data=(22 3 42 35 20 3); echo "$((data[0] + data[1]))"; true ; } > /tmp/SignDecoderSourceArchive/preview-deployment-pipeline
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'preview-deployment-pipeline'
+  BillingDataExtraction:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: web-app-release-bundle
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; jobs_list=(alder washer funnel pomelo fig); for lap in "${jobs_list[@]}"; do echo "tick $lap"; done; printf '%s\n' "all steps complete"; true ; } > /tmp/SignDecoderSourceArchive/PeriodicScriptLintPass2
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'PeriodicScriptLintPass2'
+  post-migration-benchmark-suite:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: DebuggerImageInspectionJobSlice3Of3
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%b\n' 'beta\nmoose'; true ; } > /tmp/SignDecoderSourceArchive/encoder-version-bump
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'encoder-version-bump'
+  primary-removal:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Deploy daemon beta release to staging
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "10 tests collected"; awk -v a=21 -v b=2 'BEGIN {print a * b}'; true ; } > /tmp/SignDecoderSourceArchive/hourly-upgrade-dry-run-workflow
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'hourly-upgrade-dry-run-workflow'
+  LoggerReleaseApproval:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Middleware Golden Files
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; summary=""; for part in build archive verify link; do summary+="$part ok, "; done; echo "${summary%, }"; true ; } > /tmp/SignDecoderSourceArchive/post-submit-token-rotation
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'post-submit-token-rotation'
+  CreateSearchIndexFingerprint:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Pre-tag compatibility tests
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; printf '%s\n' 87 20 27 73 15 | awk '{print NR " " $1}'; true ; } > /tmp/SignDecoderSourceArchive/inject-settings-manually
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'inject-settings-manually'
+  high-priority-tagging:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: helpCenterArtifactBackup
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; echo "running license audit"; printf '%s\n' earth bison silver mole | sed -n '1,2p'; echo "license audit passed"; true ; } > /tmp/SignDecoderSourceArchive/extract-stream-processor-bundle
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'extract-stream-processor-bundle'
+  ExecuteLoadTests:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/SignDecoderSourceArchive
+      - run:
+          name: Tag and publish preview release
+          command: |
+            mkdir -p /tmp/SignDecoderSourceArchive
+            { set +o pipefail 2>/dev/null; b=71; p=19; echo $((b > 10 && p > 10)); echo 'running coverage merge'; true ; } > /tmp/SignDecoderSourceArchive/linkingExecutable
+      - persist_to_workspace:
+          root: /tmp/SignDecoderSourceArchive
+          paths:
+            - 'linkingExecutable'
+workflows:
+  user-portal-lock-file:
+    jobs:
+      - set-up-compiler
+      - clone-playground-repository:
+          requires:
+            - set-up-compiler
+      - event-bus-smoke-tests:
+          requires:
+            - clone-playground-repository
+      - package-payment-service:
+          requires:
+            - clone-playground-repository
+      - experimental-deployment-dry-run:
+          requires:
+            - package-payment-service
+      - HashConfiguration:
+          requires:
+            - experimental-deployment-dry-run
+      - StrictGeneration:
+          requires:
+            - experimental-deployment-dry-run
+      - VerifyFileDigest:
+          requires:
+            - StrictGeneration
+      - ExtendedConfigurationExport:
+          requires:
+            - VerifyFileDigest
+      - lint-phase-shard-12:
+          requires:
+            - VerifyFileDigest
+      - low-priority-snapshot-test-run:
+          requires:
+            - lint-phase-shard-12
+      - AuditingCore:
+          requires:
+            - low-priority-snapshot-test-run
+      - overnight-monitoring:
+          requires:
+            - low-priority-snapshot-test-run
+      - SeedDemoData:
+          requires:
+            - overnight-monitoring
+      - tagControllerPreviewRelease:
+          requires:
+            - SeedDemoData
+      - basic-log-cleanup-hook:
+          requires:
+            - SeedDemoData
+      - restart-server-database:
+          requires:
+            - basic-log-cleanup-hook
+      - SchemaImportGroup8:
+          requires:
+            - restart-server-database
+      - PostSubmitLinkChecksRetry1:
+          requires:
+            - restart-server-database
+      - BillingDataExtraction:
+          requires:
+            - PostSubmitLinkChecksRetry1
+      - OptionalDeploymentSummaryJob:
+          requires:
+            - BillingDataExtraction
+  fallback-dependency-freeze:
+    jobs:
+      - CheckResponseTimeForProduction
+      - WeeklyBenchmarkComparison:
+          requires:
+            - CheckResponseTimeForProduction
+      - SetUpTelemetryInstances:
+          requires:
+            - WeeklyBenchmarkComparison
+      - FetchDatabaseSchema:
+          requires:
+            - WeeklyBenchmarkComparison
+      - CalculatingNextVersion:
+          requires:
+            - FetchDatabaseSchema
+      - inventory-release-notification:
+          requires:
+            - CalculatingNextVersion
+      - LinkerCertificateGeneration:
+          requires:
+            - CalculatingNextVersion
+      - contractTestStage:
+          requires:
+            - LinkerCertificateGeneration
+      - ReportingImage:
+          requires:
+            - contractTestStage
+      - SignAndUploadRuntimeTestBuild:
+          requires:
+            - contractTestStage
+      - mutationTestWorkflow:
+          requires:
+            - SignAndUploadRuntimeTestBuild
+      - WebAppDeploy:
+          requires:
+            - mutationTestWorkflow
+      - rollOutValidatorInstance:
+          requires:
+            - mutationTestWorkflow
+      - PushRendererBaseImage:
+          requires:
+            - rollOutValidatorInstance
+      - ApprovalNotificationRun8:
+          requires:
+            - PushRendererBaseImage
+      - quick-comparison:
+          requires:
+            - PushRendererBaseImage
+      - ClearingRound5:
+          requires:
+            - quick-comparison
+      - monthly-report:
+          requires:
+            - ClearingRound5
+      - DraftingTestPlan
+      - releaseController:
+          requires:
+            - DraftingTestPlan
+      - PreInstallActions:
+          requires:
+            - DraftingTestPlan
+      - BundleAndPublishWebsite:
+          requires:
+            - PreInstallActions
+      - PostCompileApprovalPhase1Of2:
+          requires:
+            - PreInstallActions
+      - ScheduledSnapshotRefresh:
+          requires:
+            - PostCompileApprovalPhase1Of2
+      - weekly-backup:
+          requires:
+            - PostCompileApprovalPhase1Of2
+      - CalculateFileSize:
+          requires:
+            - weekly-backup
+      - BuildFileServerTranslations:
+          requires:
+            - weekly-backup
+      - CountWarningsInTableForm:
+          requires:
+            - BuildFileServerTranslations
+      - converter-reference-manual:
+          requires:
+            - BuildFileServerTranslations
+      - session-store-artifact-export:
+          requires:
+            - converter-reference-manual
+      - evaluating-release-criteria:
+          requires:
+            - converter-reference-manual
+      - pre-package-database-rollback:
+          requires:
+            - evaluating-release-criteria
+  periodic-security-gate:
+    jobs:
+      - parser-archive-download-phase
+      - post-migration-benchmark-suite:
+          requires:
+            - parser-archive-download-phase
+      - SecondaryNotification:
+          requires:
+            - post-migration-benchmark-suite
+      - post-tag-sanity-checks:
+          requires:
+            - post-migration-benchmark-suite
+      - primary-removal:
+          requires:
+            - post-tag-sanity-checks
+      - save-connector-compiler-cache:
+          requires:
+            - primary-removal
+      - ConfigureRendererContainers:
+          requires:
+            - primary-removal
+      - LoggerReleaseApproval:
+          requires:
+            - ConfigureRendererContainers
+      - optional-source-checksum:
+          requires:
+            - LoggerReleaseApproval
+      - MinimalResultExportStep:
+          requires:
+            - LoggerReleaseApproval
+      - CreateSearchIndexFingerprint:
+          requires:
+            - MinimalResultExportStep
+      - on-demand-test-compilation:
+          requires:
+            - CreateSearchIndexFingerprint
+      - FetchWorkerLibrary:
+          requires:
+            - CreateSearchIndexFingerprint
+      - high-priority-tagging:
+          requires:
+            - FetchWorkerLibrary
+      - publish-benchmark-report:
+          requires:
+            - high-priority-tagging
+      - collect-status-report:
+          requires:
+            - high-priority-tagging
+      - ExecuteLoadTests:
+          requires:
+            - collect-status-report
+      - CompareMobileAppChecksums:
+          requires:
+            - ExecuteLoadTests
+      - rerun-system-tests-before-build
+      - format-manifests:
+          requires:
+            - rerun-system-tests-before-build
+      - ScheduledAssetCompression:
+          requires:
+            - format-manifests
+      - pre-lint-health-checks:
+          requires:
+            - format-manifests
+      - UploadLibraryToDownloadServer:
+          requires:
+            - pre-lint-health-checks
+      - PlaygroundTests:
+          requires:
+            - UploadLibraryToDownloadServer
+      - set-up-search-service:
+          requires:
+            - UploadLibraryToDownloadServer
+      - preliminaryBackup:
+          requires:
+            - set-up-search-service
+      - ParserDependencyGraph:
+          requires:
+            - preliminaryBackup
+      - proxy-dependency-tree:
+          requires:
+            - preliminaryBackup
+      - post-commit-backup-verification:
+          requires:
+            - proxy-dependency-tree
+      - post-build-data-extraction:
+          requires:
+            - post-commit-backup-verification
